@@ -35,11 +35,11 @@ var quizQuestions = [{
     correctAnswer: "c"},
 
     {
-    question: "Inside which HTML element dow we put the JavaScript?",
-    choiceA: "<js>",
-    choiceB: "<scripting>",
-    choiceC: "<script>",
-    choiceD: "<javascript>",
+    question: "Which built-in method removes the last element from an array and returns that element?",
+    choiceA: "last()",
+    choiceB: "get()",
+    choiceC: "pop()",
+    choiceD: "None of the above",
     correctAnswer: "c"},
 
     {
@@ -88,7 +88,7 @@ function startQuiz(){
         }
     }, 1000);
     quizBody.style.display = "block";
-}
+};
 
 function showScore(){
     quizBody.style.display = "none";
@@ -96,7 +96,7 @@ function showScore(){
     clearInterval(timerInterval);
     highscoreInputName.value = "";
     finalScoreE1.innerHTML = "You got " + score + " out of " + quizQuestions.length + " correct!";
-}
+};
 
 
 submitScoreBtn.addEventListener("click", function highscore(){
@@ -123,3 +123,63 @@ submitScoreBtn.addEventListener("click", function highscore(){
         generateHighscores();
     }
 });
+
+function generateHighscores() {
+    highscoreDisplayName.innerHTML = "";
+    highscoreDisplayScore.innerHTML = "";
+    var highscores = JSON.parse(localStorage.getItem("savedHighscores")) || [];
+    for (var i = 0; i < highscores.length; i++){
+        var newNameSpan = document.createElement("li");
+        var newScoreSpan = document.createElement("li");
+        newNameSpan.textContent = highscores[i].name;
+        newScoreSpan.textContent = highscores[i].score;
+        highscoreDisplayName.appendChild(newNameSpan);
+        highscoreDisplayScore.appendChild(newScoreSpan);
+    }
+};
+
+function showHighscore(){
+    startQuizDiv.style.display = "none";
+    gameoverDiv.style.display = "none";
+    highscoreContainer.style.display = "flex";
+    highscoreDiv.style.display = "block";
+    endGameBtns.style.display = "flex";
+
+    generateHighscores();
+};
+
+function clearScore(){
+    window.localStorage.clear();
+    highscoreDisplayName.textContent = "";
+    highscoreDisplayScore.textContent = "";
+};
+
+function replayQuiz(){
+    highscoreContainer.style.display = "none";
+    gameoverDiv.style.display = "none";
+    startQuizDiv.style.display = "flex";
+    timeLeft = 76;
+    score = 0;
+    currentQuestionIndex = 0;
+};
+
+function checkAnswer(answer){
+    correct = quizQuestions[currentQuestionIndex].correctAnswer;
+
+    if (answer === correct && currentQuestionIndex !== finalQuestionIndex){
+        score++;
+        alert("This is Correct!");
+        currentQuestionIndex++;
+        generateQuizQuestion();
+
+    }else if (answer !== correct && currentQuestionIndex !== finalQuestionIndex){
+        alert("This is Incorrect!");
+        currentQuestionIndex++;
+        generateQuizQuestion();
+
+    }else{
+        showScore();
+    }
+};
+
+startQuizButton.addEventListener("click",startQuiz);
